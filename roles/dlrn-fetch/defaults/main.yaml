@@ -1,0 +1,3 @@
+---
+working_dir: "{{ ansible_user_dir }}/{{ zuul.project.src_dir | dirname }}"
+dlrn_data: "{{ working_dir }}/DLRN/data"

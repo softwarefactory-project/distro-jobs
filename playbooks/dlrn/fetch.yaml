@@ -1,0 +1,3 @@
+- hosts: mock-host
+  roles:
+    - dlrn-fetch

@@ -1,0 +1,10 @@
+---
+- name: Import commit
+  command: >
+   dlrnapi
+     --url {{ dlrn_api_url }}/{{ dlrn_project }}
+     --username {{ dlrn_user.username }}
+     commit-import --repo-url {{ zuul.artifacts[-1].url }}/current
+  environment:
+    DLRNAPI_PASSWORD: "{{ dlrn_user.password | trim }}"
+    SSL_VERIFY: "{{ dlrn_ssl_verify | default('1') }}"

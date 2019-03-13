@@ -1,0 +1,24 @@
+---
+- name: Check for dlrnapi-client installed
+  command: bash -c "type dlrnapi"
+  ignore_errors: yes
+  failed_when: dlrnapi-client_exists.rc not in [0, 1]
+  register: dlrnapi-client_exists
+
+- name: Try to install via RPM
+  package:
+    name: rh-python35-dlrnapi-client
+    state: present
+  ignore_errors: true
+  failed_when: pkg_present.rc not in [0, 1]
+  become: true
+  register: pkg_present
+  when: dlrnapi-client_exists is failed
+
+#TODO: Maybe better to install it in a virtualenv ?
+- name: Install using pip if yum fails
+  pip:
+    name: dlrnapi-client
+  when:
+    - pkg_present is failed
+    - dlrnapi-client_exists is failed

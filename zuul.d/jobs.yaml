@@ -1,0 +1,18 @@
+---
+- job:
+    name: dlrn-build
+    description: Build project's package.
+    parent: dlrn-prepare
+    abstract: true
+    run: playbooks/dlrn/build.yaml
+    post-run: playbooks/dlrn/fetch.yaml
+    provides: dlrn-repo
+    requires: dlrn-repo
+
+- job:
+    name: dlrn-publish
+    description: Submit a current repository
+    parent: dlrn-prepare
+    abstract: true
+    run: playbooks/dlrn/publish.yaml
+    requires: dlrn-repo

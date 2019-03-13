@@ -1,0 +1,24 @@
+---
+- name: Check for rdopkg installed
+  command: bash -c "type rdopkg"
+  ignore_errors: yes
+  failed_when: rdopkg_exists.rc not in [0, 1]
+  register: rdopkg_exists
+
+- name: Try to install via RPM
+  package:
+    name: rh-python35-rdopkg
+    state: present
+  ignore_errors: true
+  failed_when: pkg_present.rc not in [0, 1]
+  become: true
+  register: pkg_present
+  when: rdopkg_exists is failed
+
+#TODO: Maybe better to install it in a virtualenv ?
+- name: Install using pip if yum fails
+  pip:
+    name: rdopkg
+  when:
+    - pkg_present is failed
+    - rdopkg_exists is failed

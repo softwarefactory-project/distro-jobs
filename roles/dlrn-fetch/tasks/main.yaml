@@ -1,0 +1,14 @@
+---
+- name: Upload logs for all builds
+  synchronize:
+    src: '{{ dlrn_data }}/repos/'
+    dest: '{{ zuul.executor.log_root }}/buildset/'
+    mode: pull
+
+- name: Return repo url
+  zuul_return:
+    data:
+      zuul:
+        artifacts:
+          - name: dlrn-repo
+            url: buildset

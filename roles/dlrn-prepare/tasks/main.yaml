@@ -1,0 +1,34 @@
+- name: Ensure __rdoinfo exists
+  file:
+    path: "{{ ansible_user_dir }}/__rdoinfo"
+    state: directory
+
+- name: Create rdo.yml
+  shell: |
+    curl "{{ dlrn_config_url }}/{{ dlrn_project }}" > "{{ ansible_user_dir }}/__rdoinfo/rdo.yml"
+    ln -s rdo.yml "{{ ansible_user_dir }}/__rdoinfo/rdo-full.yml"
+
+- name: Copy project mock config
+  copy:
+    src: "{{ zuul.executor.src_root }}/{{ dlrn_config_dir }}/{{ dlrn_project }}.cfg"
+    dest: "{{ ansible_user_dir }}/{{ dlrn_project }}.cfg"
+
+- name: Setup default mock configuration
+  blockinfile:
+    path: /etc/mock/site-defaults.cfg
+    content: |
+      config_opts['plugin_conf']['tmpfs_enable'] = True
+      config_opts['plugin_conf']['tmpfs_opts'] = {}
+      config_opts['plugin_conf']['tmpfs_opts']['required_ram_mb'] = 2048
+      config_opts['plugin_conf']['tmpfs_opts']['max_fs_size'] = '4g'
+      config_opts['plugin_conf']['tmpfs_opts']['mode'] = '0755'
+      config_opts['plugin_conf']['tmpfs_opts']['keep_mounted'] = True
+  become: true
+  when: dlrn_enable_tmpfs | default(true)
+
+- name: Add user to mock group
+  user:
+    name: "{{ ansible_user }}"
+    groups: mock
+    append: yes
+  become: true
