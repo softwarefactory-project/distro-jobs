@@ -1,24 +1,18 @@
 ---
-- name: Check for dlrnapi-client installed
-  command: bash -c "type dlrnapi"
-  ignore_errors: yes
-  failed_when: dlrnapi-client_exists.rc not in [0, 1]
-  register: dlrnapi-client_exists
+- name: Checkout dlrnapi_client
+  git:
+    repo: '{{ dlrnapi_client_repo }}'
+    dest: /tmp/dlrnapi_client
+    update: yes
+    force: yes
+    version: '{{ dlrnapi_client_version }}'
 
-- name: Try to install via RPM
-  package:
-    name: rh-python35-dlrnapi-client
-    state: present
-  ignore_errors: true
-  failed_when: pkg_present.rc not in [0, 1]
-  become: true
-  register: pkg_present
-  when: dlrnapi-client_exists is failed
-
-#TODO: Maybe better to install it in a virtualenv ?
-- name: Install using pip if yum fails
+- name: Install dlrnapi_client
   pip:
-    name: dlrnapi-client
-  when:
-    - pkg_present is failed
-    - dlrnapi-client_exists is failed
+    executable: '{{ pip_executable }}'
+    name: file:///tmp/dlrnapi_client
+    extra_args: --user
+
+- name: Set dlrnapi_client executable variable
+  set_fact:
+    dlrnapi: '{{ ansible_user_dir }}/.local/bin/dlrnapi'

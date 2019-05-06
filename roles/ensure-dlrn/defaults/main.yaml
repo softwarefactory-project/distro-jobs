@@ -1,0 +1,3 @@
+pip_executable: /usr/bin/pip
+dlrn_repo: https://github.com/softwarefactory-project/DLRN
+dlrn_version: master

@@ -1,0 +1,3 @@
+pip_executable: /usr/bin/pip
+dlrnapi_client_repo: https://github.com/softwarefactory-project/dlrnapi_client
+dlrnapi_client_version: master

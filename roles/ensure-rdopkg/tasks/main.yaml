@@ -1,24 +1,18 @@
 ---
-- name: Check for rdopkg installed
-  command: bash -c "type rdopkg"
-  ignore_errors: yes
-  failed_when: rdopkg_exists.rc not in [0, 1]
-  register: rdopkg_exists
+- name: Checkout rdopkg
+  git:
+    repo: '{{ rdopkg_repo }}'
+    dest: /tmp/rdopkg
+    update: yes
+    force: yes
+    version: '{{ rdopkg_version }}'
 
-- name: Try to install via RPM
-  package:
-    name: rh-python35-rdopkg
-    state: present
-  ignore_errors: true
-  failed_when: pkg_present.rc not in [0, 1]
-  become: true
-  register: pkg_present
-  when: rdopkg_exists is failed
-
-#TODO: Maybe better to install it in a virtualenv ?
-- name: Install using pip if yum fails
+- name: Install rdopkg
   pip:
-    name: rdopkg
-  when:
-    - pkg_present is failed
-    - rdopkg_exists is failed
+    executable: '{{ pip_executable }}'
+    name: file:///tmp/rdopkg
+    extra_args: --user
+
+- name: Set rdopkg executable variable
+  set_fact:
+    rdopkg: '{{ ansible_user_dir }}/.local/bin/rdopkg'

@@ -35,7 +35,7 @@
       {% endif %}{% endfor %}
 
 - name: Get project info
-  command: "rdopkg findpkg {{ zuul.project.name }} -l {{ rdoinfo_dir }}"
+  command: "{{ rdopkg }} findpkg {{ zuul.project.name }} -l {{ rdoinfo_dir }}"
   register: result_info
 
 - set_fact:
@@ -63,7 +63,7 @@
 
 - name: Run DLRN build
   command: >
-    dlrn --config-file projects.ini
+    {{ dlrn }} --config-file projects.ini
          --package-name {{ project_info['name'] }}
          --use-public
          --local

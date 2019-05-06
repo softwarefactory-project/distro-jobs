@@ -1,7 +1,7 @@
 ---
 - name: Import commit
   command: >
-   dlrnapi
+   {{ dlrnapi }}
      --url {{ dlrn_api_url }}/{{ dlrn_project }}
      --username {{ dlrn_user.username }}
      commit-import --repo-url {{ zuul.artifacts[-1].url }}/current

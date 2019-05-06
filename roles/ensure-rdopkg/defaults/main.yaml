@@ -1,0 +1,3 @@
+pip_executable: /usr/bin/pip
+rdopkg_repo: https://github.com/softwarefactory-project/rdopkg
+rdopkg_version: master

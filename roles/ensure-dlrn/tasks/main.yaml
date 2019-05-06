@@ -1,24 +1,18 @@
 ---
-- name: Check for dlrn installed
-  command: bash -c "type dlrn"
-  ignore_errors: yes
-  failed_when: dlrn_exists.rc not in [0, 1]
-  register: dlrn_exists
+- name: Checkout DLRN
+  git:
+    repo: '{{ dlrn_repo }}'
+    dest: /tmp/DLRN
+    update: yes
+    force: yes
+    version: '{{ dlrn_version }}'
 
-- name: Try to install via RPM
-  package:
-    name: rh-python35-dlrn
-    state: present
-  ignore_errors: true
-  failed_when: pkg_present.rc not in [0, 1]
-  become: true
-  register: pkg_present
-  when: dlrn_exists is failed
-
-#TODO: Maybe better to install it in a virtualenv ?
-- name: Install using pip if yum fails
+- name: Install DLRN
   pip:
-    name: dlrn
-  when:
-    - pkg_present is failed
-    - dlrn_exists is failed
+    executable: '{{ pip_executable }}'
+    name: file:///tmp/DLRN
+    extra_args: --user
+
+- name: Set DLRN executable variable
+  set_fact:
+    dlrn: '{{ ansible_user_dir }}/.local/bin/dlrn'
