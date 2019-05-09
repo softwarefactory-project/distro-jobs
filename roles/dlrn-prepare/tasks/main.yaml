@@ -1,12 +1,33 @@
-- name: Ensure __rdoinfo exists
-  file:
-    path: "{{ ansible_user_dir }}/__rdoinfo"
-    state: directory
+- name: Check dlrn_project is defined
+  assert:
+    that:
+      - dlrn_project is defined
+    fail_msg: "'dlrn_project' must be set to the packaging project name"
 
-- name: Create rdo.yml
-  shell: |
-    curl "{{ dlrn_config_url }}/{{ dlrn_project }}" > "{{ ansible_user_dir }}/__rdoinfo/rdo.yml"
-    ln -s rdo.yml "{{ ansible_user_dir }}/__rdoinfo/rdo-full.yml"
+- name: Check dlrn_config_dir is defined
+  assert:
+    that:
+      - dlrn_config_dir is defined
+    fail_msg: "'dlrn_config_dir' must be set to the repository name containing the mock config named {{ dlrn_project }}.cfg"
+
+- name: Prepare for RdoInfo driver build type
+  when: dlrn_build_type == 'rdoinfo'
+  block:
+    - name: Check dlrn_config_dir is defined
+      assert:
+        that:
+          - dlrn_config_url is defined
+        fail_msg: "'dlrn_config_url' must be set to an URL where {{ dlrn_project }} can be downloaded. This is the rdoinfo file."
+
+    - name: Ensure __rdoinfo exists
+      file:
+        path: "{{ ansible_user_dir }}/__rdoinfo"
+        state: directory
+
+    - name: Create rdo.yml
+      shell: |
+        curl "{{ dlrn_config_url }}/{{ dlrn_project }}" > "{{ ansible_user_dir }}/__rdoinfo/rdo.yml"
+        ln -s rdo.yml "{{ ansible_user_dir }}/__rdoinfo/rdo-full.yml"
 
 - name: Copy project mock config
   copy:

@@ -34,26 +34,29 @@
 
       {% endif %}{% endfor %}
 
-- name: Get project info
-  command: "{{ rdopkg }} findpkg {{ zuul.project.name }} -l {{ rdoinfo_dir }}"
-  register: result_info
+- name: Prepare source and distgit source in the data directory
+  when: dlrn_build_type == 'rdoinfo'
+  block:
+    - name: Get project info
+      command: "{{ rdopkg }} findpkg {{ zuul.project.name }} -l {{ rdoinfo_dir }}"
+      register: result_info
 
-- set_fact:
-    project_info: "{{ result_info.stdout | from_yaml }}"
+    - set_fact:
+        project_info: "{{ result_info.stdout | from_yaml }}"
 
-- name: Copy distgit in data directory
-  shell:
-    cmd: "ln -s {{ ansible_user_dir }}/{{ zuul.project.src_dir }} {{ dlrn_data }}/{{ project_info['name'] }}_distro"
-  when: zuul.project.name is match(".*-distgit$") or project_info['upstream'] == project_info['distgit']
+    - name: Copy distgit in data directory
+      shell:
+        cmd: "ln -s {{ ansible_user_dir }}/{{ zuul.project.src_dir }} {{ dlrn_data }}/{{ project_info['name'] }}_distro"
+      when: zuul.project.name is match(".*-distgit$") or project_info['upstream'] == project_info['distgit']
 
-- name: Copy source in data directory
-  shell:
-    cmd: "ln -s {{ ansible_user_dir }}/{{ zuul.project.src_dir }} {{ dlrn_data }}/{{ project_info['name'] }}"
-  when: not zuul.project.name is match(".*-distgit$") or project_info['upstream'] == project_info['distgit']
+    - name: Copy source in data directory
+      shell:
+        cmd: "ln -s {{ ansible_user_dir }}/{{ zuul.project.src_dir }} {{ dlrn_data }}/{{ project_info['name'] }}"
+      when: not zuul.project.name is match(".*-distgit$") or project_info['upstream'] == project_info['distgit']
 
 - name: Set project.ini values according to current config
   template:
-    src: projects.ini.j2
+    src: "{{ dlrn_build_type }}-projects.ini.j2"
     dest: "{{ working_dir }}/projects.ini"
 
 - name: Clean previous commits.sqlite
@@ -61,7 +64,8 @@
     path: "{{ working_dir }}/commits.sqlite"
     state: absent
 
-- name: Run DLRN build
+- name: Run DLRN build (rdoinfo driver)
+  when: dlrn_build_type == 'rdoinfo'
   command: >
     {{ dlrn }} --config-file projects.ini
          --package-name {{ project_info['name'] }}
@@ -71,6 +75,16 @@
          --verbose-build
   args:
     chdir: "{{ working_dir }}"
+  ignore_errors: yes
+  register: dlrnbuild
+
+- name: Run DLRN build (local driver)
+  when: dlrn_build_type == 'local'
+  command: >
+    {{ dlrn }} --config-file {{ working_dir }}/projects.ini
+         --verbose-build
+  args:
+    chdir: "{{ ansible_user_dir }}/{{ zuul.project.src_dir }}"
   ignore_errors: yes
   register: dlrnbuild
 

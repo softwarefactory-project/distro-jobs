@@ -1,14 +1,13 @@
 [DEFAULT]
 configdir={{ working_dir }}
 datadir={{ dlrn_data }}
-scriptsdir={{ dlrn_scripts_dir }}
+scriptsdir={{ ansible_user_dir }}/.local/share/dlrn/scripts
 baseurl={{ dlrn_url }}/{{ dlrn_project }}
 distro=master
 source=master
 target={{ dlrn_project }}
 project_name={{ dlrn_project }}
 reponame=delorean
-templatedir={{ dlrn_templates_dir }}
 maxretries=3
 smtpserver=
 pkginfo_driver=dlrn.drivers.rdoinfo.RdoInfoDriver

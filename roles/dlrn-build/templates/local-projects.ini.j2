@@ -1,0 +1,17 @@
+[DEFAULT]
+configdir={{ working_dir }}
+datadir={{ dlrn_data }}
+scriptsdir={{ ansible_user_dir }}/.local/share/dlrn/scripts
+distro=master
+source=master
+target={{ dlrn_project }}
+project_name={{ dlrn_project }}
+reponame=delorean
+maxretries=3
+smtpserver=
+pkginfo_driver=dlrn.drivers.local.LocalDriver
+tags=
+workers=1
+database_connection=sqlite:///{{ working_dir }}/commits.sqlite
+fallback_to_master=1
+release_numbering=0.1.date.hash
