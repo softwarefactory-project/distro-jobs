@@ -10,6 +10,12 @@
       - dlrn_config_dir is defined
     fail_msg: "'dlrn_config_dir' must be set to the repository name containing the mock config named {{ dlrn_project }}.cfg"
 
+- name: Ensure system dependencies are installed
+  yum:
+    name: git, createrepo, mock, redhat-rpm-config, rpmdevtools
+    state: present
+  become: true
+
 - name: Prepare for RdoInfo driver build type
   when: dlrn_info_type == 'rdoinfo'
   block:
