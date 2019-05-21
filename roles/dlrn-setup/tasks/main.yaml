@@ -1,0 +1,14 @@
+---
+- name: Add intermediary repositories from changes ahead
+  become: yes
+  copy:
+    dest: "/etc/yum.repos.d/zuul-build.repo"
+    content: |
+      {% for artifact in zuul.artifacts|default([]) %}{% if artifact.name == 'dlrn-repo' %}
+      [{{ artifact.project }}-{{ artifact.change }}-{{ artifact.patchset }}]
+      name={{ artifact.project }}-{{ artifact.change }}-{{ artifact.patchset }}
+      enabled=1
+      baseurl={{ artifact.url }}/current
+      gpgcheck=0
+
+      {% endif %}{% endfor %}
