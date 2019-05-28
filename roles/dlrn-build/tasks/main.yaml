@@ -35,7 +35,7 @@
       {% endif %}{% endfor %}
 
 - name: Prepare source and distgit source in the data directory
-  when: dlrn_build_type == 'rdoinfo'
+  when: dlrn_info_type == 'rdoinfo'
   block:
     - name: Get project info
       command: "{{ rdopkg }} findpkg {{ zuul.project.name }} -l {{ rdoinfo_dir }}"
@@ -56,7 +56,7 @@
 
 - name: Set project.ini values according to current config
   template:
-    src: "{{ dlrn_build_type }}-projects.ini.j2"
+    src: "{{ dlrn_info_type }}-projects.ini.j2"
     dest: "{{ working_dir }}/projects.ini"
 
 - name: Clean previous commits.sqlite
@@ -65,7 +65,7 @@
     state: absent
 
 - name: Run DLRN build (rdoinfo driver)
-  when: dlrn_build_type == 'rdoinfo'
+  when: dlrn_info_type == 'rdoinfo'
   command: >
     {{ dlrn }} --config-file projects.ini
          --package-name {{ project_info['name'] }}
@@ -79,7 +79,7 @@
   register: dlrnbuild
 
 - name: Run DLRN build (local driver)
-  when: dlrn_build_type == 'local'
+  when: dlrn_info_type == 'local'
   command: >
     {{ dlrn }} --config-file {{ working_dir }}/projects.ini
          --verbose-build
