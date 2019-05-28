@@ -16,3 +16,9 @@
 - name: Set DLRN executable variable
   set_fact:
     dlrn: '{{ ansible_user_dir }}/.local/bin/dlrn'
+
+- name: Install some DLRN system requierements
+  yum:
+    name: git, createrepo, mock, redhat-rpm-config, rpmdevtools
+    state: present
+  become: true

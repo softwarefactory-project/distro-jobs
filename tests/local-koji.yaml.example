@@ -1,8 +1,11 @@
+# TODO add preparation play to setup environement to run this
+
+
 - hosts: localhost
   roles:
     - ensure-dlrn
     - dlrn-prepare
-    - dlrn-build
+    - dlrn-koji-build
   vars:
     ansible_user_dir: /home/fabien/dlrn-exp/fake_ansible_user_dir
     zuul:
@@ -10,6 +13,8 @@
         src_root: /home/fabien/dlrn-exp/src_root
       project:
         src_dir: python-redis
-    dlrn_repo: file:///home/fabien/git/softwarefactory-project.io-git/DLRN
     dlrn_project: fedora-rawhide-x86_64
     dlrn_config_dir: fedora-packaging/mock
+    krb_principal: fbo@FEDORAPROJECT.ORG
+    krb_keytab_path: /home/fabien/fedora-fbo.keytab
+    

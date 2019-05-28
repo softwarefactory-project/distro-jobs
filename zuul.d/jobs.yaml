@@ -1,18 +1,77 @@
 ---
 - job:
-    name: dlrn-build
-    description: Build project's package.
-    parent: dlrn-prepare
+    name: dlrn-rpm-build
     abstract: true
-    run: playbooks/dlrn/build.yaml
-    post-run: playbooks/dlrn/fetch.yaml
+    description: |
+      Base job to build rpm(s) from package with DLRN
+
+      Responds to these variables:
+
+      .. zuul:jobvar:: dlrn_project
+
+         Name of the packaging project.
+
+      .. zuul:jobvar:: dlrn_config_dir
+
+         Path in the Zuul executor where to find mock cfg files
+
     provides: dlrn-repo
     requires: dlrn-repo
+    post-run: playbooks/dlrn/fetch.yaml
 
 - job:
-    name: dlrn-publish
-    description: Submit a current repository
-    parent: dlrn-prepare
+    name: dlrn-mock-rpm-build
+    description: Build rpm(s) in a mock
+    parent: dlrn-rpm-build
     abstract: true
-    run: playbooks/dlrn/publish.yaml
-    requires: dlrn-repo
+    run: playbooks/dlrn/mock-build.yaml
+
+- job:
+    name: dlrn-koji-rpm-build
+    description: |
+      Build rpm(s) in Koji
+
+      Responds to these variables:
+
+      .. zuul:jobvar:: krb_principal
+
+         The Kerberos principal.
+
+      .. zuul:jobvar:: krb_keytab_path
+
+         The path to principal's keytab.
+
+    parent: dlrn-rpm-build
+    abstract: true
+    run: playbooks/dlrn/koji-build.yaml
+
+# Below are some job examples
+# - job:
+#     name: example-rpm-mock-build
+#     description: Build rpm(s) for Fedora rawhide
+#     parent: dlrn-mock-rpm-build
+#     required-projects:
+#       - fedora-zuul-packaging-jobs
+#     nodeset:
+#       nodes:
+#       - name: mock-node
+#         label: cloud-fedora
+#     vars:
+#       dlrn_project: fedora-rawhide-x86_64
+#       dlrn_config_dir: pagure.io/fedora-zuul-packaging-jobs/mocks
+
+# - job:
+#     name: example-rpm-mock-build
+#     description: Build rpm(s) for Fedora rawhide
+#     parent: dlrn-mock-rpm-build
+#     required-projects:
+#       - fedora-zuul-packaging-jobs
+#     nodeset:
+#       nodes:
+#       - name: mock-node
+#         label: cloud-fedora
+#     vars:
+#       dlrn_project: fedora-rawhide-x86_64
+#       dlrn_config_dir: pagure.io/fedora-zuul-packaging-jobs/mocks
+#       krb_principal: jdoe@FEDORAPROJECT.ORG
+#       krb_keytab_path: "{{ ansible_user_dir }}/jdoe.keytab"

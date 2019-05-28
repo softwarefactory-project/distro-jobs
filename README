@@ -1,21 +1,4 @@
 # distro jobs toolbox
 
-This project contains jobs and roles to manage RPM build and publication.
-
-## TODO
-
-* Implement a ensure-dlrn role
-* Implement a ensure-dlrnclient role
-* Implement a ensure-rdopkg role
-* Make DLRN discover scripts and templates dir if not defined
-
-* Fix HOME variable for dlrn wsgi
-
-* Figure out why rdopkg wants rdo-full.yml and dlrn wants rdo.yml
-
-* Add distroinfo configuration endpoint in managesf to generate package list based on repo definition
-  -> A distro configuration is linked to a config project that manage the project configuration of distgit projects
-
-* DLRN config-update takes care of proposing a review to the distro config project with the .zuul.d/_secrets_dlrn_{{ dlrn_project }}.yaml
-
-
+This project contains job and roles to manage RPM build and publication
+with Zuul.

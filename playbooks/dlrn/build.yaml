@@ -1,6 +1,0 @@
-- hosts: mock-host
-  roles:
-    # TODO
-    #- ensure-dlrn
-    #- ensure-rdopkg
-    - dlrn-build
