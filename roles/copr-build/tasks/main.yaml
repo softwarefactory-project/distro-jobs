@@ -1,0 +1,29 @@
+- name: Build package in copr
+  command: |
+    {{ copr_cmd }} build {{ project_name }}.{{ zuul.change }}.{{ zuul.patchset }} {{ srpm }}
+
+- name: Get last build info
+  command: |
+    {{ copr_cmd }} list-packages {{ project_name }}.{{ zuul.change }}.{{ zuul.patchset }} --with-latest-build
+  register: info
+
+- set_fact:
+    build_data: "{{ info.stdout | from_json }}"
+
+- name: Get build id
+  set_fact:
+    build_id: "{{ build_data[0]['latest_build']['id'] }}"
+
+- name: Clean previously downloaded artifacts if exists
+  file:
+    path: "{{ ansible_user_dir }}/copr_repos/{{ chroot_name }}"
+    state: absent
+
+- name: Fetch build artifacts from copr
+  command: |
+    {{ copr_cmd }} download-build -d {{ ansible_user_dir }}/copr_repos {{ build_id }}
+
+- name: Create repository
+  command: createrepo .
+  args:
+    chdir: "{{ ansible_user_dir }}/copr_repos/{{ chroot_name }}"

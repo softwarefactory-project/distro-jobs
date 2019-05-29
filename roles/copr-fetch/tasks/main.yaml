@@ -1,0 +1,14 @@
+---
+- name: Upload logs for all builds
+  synchronize:
+    src: '{{ ansible_user_dir }}/copr_repos/{{ chroot_name }}'
+    dest: '{{ zuul.executor.log_root }}/buildset/'
+    mode: pull
+
+- name: Return repo url
+  zuul_return:
+    data:
+      zuul:
+        artifacts:
+          - name: repo
+            url: buildset

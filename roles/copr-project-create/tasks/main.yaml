@@ -1,0 +1,4 @@
+- name: Create copr project
+  command: |
+    {{ copr_cmd }} create {% for repo in repos %} --repo {{ repo }} {% endfor %}
+    --chroot {{ chroot_name }} {{ project_name }}.{{ zuul.change }}.{{ zuul.patchset }}

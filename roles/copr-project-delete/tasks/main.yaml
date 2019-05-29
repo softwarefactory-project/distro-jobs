@@ -1,0 +1,3 @@
+- name: Delete copr project
+  command: |
+    {{ copr_cmd }} delete {{ project_name }}.{{ zuul.change }}.{{ zuul.patchset }}
