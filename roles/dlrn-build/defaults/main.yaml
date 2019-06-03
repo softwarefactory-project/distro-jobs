@@ -2,3 +2,5 @@
 working_dir: "{{ ansible_user_dir }}/{{ zuul.project.src_dir | dirname }}"
 dlrn_data: "{{ working_dir }}/DLRN/data"
 rdoinfo_dir: "{{ ansible_user_dir }}/__rdoinfo"
+dlrn_info_type: local
+dlrn_builder_type: mock

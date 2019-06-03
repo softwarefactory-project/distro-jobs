@@ -15,8 +15,14 @@
 
          Path in the Zuul executor where to find mock cfg files
 
+      .. zuul:jobvar:: dlrn_info_type
+         :default: local
+
+        Can be be rdoinfo or local
+
     provides: dlrn-repo
     requires: dlrn-repo
+    run: playbooks/dlrn/build.yaml
     post-run: playbooks/dlrn/fetch.yaml
 
 - job:
@@ -24,7 +30,8 @@
     description: Build rpm(s) in a mock
     parent: dlrn-rpm-build
     abstract: true
-    run: playbooks/dlrn/mock-build.yaml
+    vars:
+      dlrn_builder_type: mock
 
 - job:
     name: dlrn-koji-rpm-build
@@ -43,7 +50,9 @@
 
     parent: dlrn-rpm-build
     abstract: true
-    run: playbooks/dlrn/koji-build.yaml
+    vars:
+      dlrn_builder_type: koji
+      koji_build_target: rawhide
 
 # Below are some job examples
 # - job:

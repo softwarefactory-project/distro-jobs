@@ -1,8 +1,4 @@
 ---
-# Fail if dlrn_project is not set
-# Fail if dlrn_build_target is not set
-# Fail if dlrn_url is not set
-
 - name: Delete data directory if exist
   file:
     path: "{{ dlrn_data }}"
@@ -56,7 +52,7 @@
 
 - name: Set project.ini values according to current config
   template:
-    src: "{{ dlrn_info_type }}-projects.ini.j2"
+    src: "projects.ini.j2"
     dest: "{{ working_dir }}/projects.ini"
 
 - name: Clean previous commits.sqlite
