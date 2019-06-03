@@ -24,6 +24,9 @@ build_driver=dlrn.drivers.mockdriver.MockBuildDriver
 {% if dlrn_builder_type == 'koji' %}
 build_driver=dlrn.drivers.kojidriver.KojiBuildDriver
 {% endif %}
+{% if dlrn_builder_type == 'copr' %}
+build_driver=dlrn.drivers.coprdriver.CoprBuildDriver
+{% endif %}
 tags=
 workers=1
 database_connection=sqlite:///{{ working_dir }}/commits.sqlite
@@ -37,4 +40,9 @@ krb_principal={{ krb_principal }}
 krb_keytab={{ krb_keytab_path }}
 scratch_build=True
 build_target={{ koji_build_target }}
+{% endif %}
+
+{% if dlrn_builder_type == 'copr' %}
+[coprbuild_driver]
+coprid={{ copr_id }}
 {% endif %}

@@ -1,0 +1,19 @@
+# TODO add preparation play to setup environement to run this
+
+
+- hosts: localhost
+  roles:
+    - ensure-dlrn
+    - dlrn-prepare
+    - dlrn-build
+  vars:
+    ansible_user_dir: /home/fabien/dlrn-exp/fake_ansible_user_dir
+    zuul:
+      executor:
+        src_root: /home/fabien/dlrn-exp/src_root
+      project:
+        src_dir: python-redis
+    dlrn_project: fedora-rawhide-x86_64
+    dlrn_config_dir: fedora-packaging/mock
+    dlrn_builder_type: copr
+    copr_id: fbo/test1
