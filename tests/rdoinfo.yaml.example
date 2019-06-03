@@ -1,0 +1,40 @@
+# TODO add preparation play to setup environement to run this
+#
+# On {{ dlrn_config_url }}/{{ dlrn_project }} add the distro info file
+# ---
+#
+#releases: []
+#
+#package-configs:
+#  pysflib:
+#    name: "%(project)s"
+#    upstream: https://softwarefactory-project.io/r/software-factory/pysflib
+#    distgit: https://softwarefactory-project.io/r/software-factory/pysflib-distgit
+#    master-distgit: https://softwarefactory-project.io/r/software-factory/pysflib-distgit
+#    maintainers:
+#      - toto@titi
+#
+#packages:
+#- project: pysflib
+#  conf: pysflib
+
+- hosts: localhost
+  roles:
+    - ensure-dlrn
+    - ensure-rdopkg
+    - dlrn-prepare
+    - dlrn-build
+  vars:
+    ansible_user_dir: /home/fabien/dlrn-exp/fake_ansible_user_dir
+    zuul:
+      executor:
+        src_root: /home/fabien/dlrn-exp/src_root
+      project:
+        name: pysflib
+        src_dir: pysflib
+    dlrn_repo: file:///home/fabien/git/softwarefactory-project.io-git/DLRN
+    dlrn_project: fedora-rawhide-x86_64
+    dlrn_config_dir: fedora-packaging/mock
+    dlrn_info_type: rdoinfo
+    dlrn_config_url: http://sftests-rdo.com/
+    # dlrn_url: http://sftests-rdo.com/repos/

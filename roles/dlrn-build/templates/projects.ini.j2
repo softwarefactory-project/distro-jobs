@@ -2,7 +2,7 @@
 configdir={{ working_dir }}
 datadir={{ dlrn_data }}
 scriptsdir={{ ansible_user_dir }}/.local/share/dlrn/scripts
-{% if base_url is defined %}
+{% if dlrn_url is defined %}
 baseurl={{ dlrn_url }}/{{ dlrn_project }}
 {% endif %}
 distro=master

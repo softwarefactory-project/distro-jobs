@@ -34,7 +34,7 @@
   when: dlrn_info_type == 'rdoinfo'
   block:
     - name: Get project info
-      command: "{{ rdopkg }} findpkg {{ zuul.project.name }} -l {{ rdoinfo_dir }}"
+      command: "{{ rdopkg }} findpkg {{ zuul.project.name }} -l {{ ansible_user_dir }} -i rdo.yml"
       register: result_info
 
     - set_fact:
@@ -65,9 +65,11 @@
   command: >
     {{ dlrn }} --config-file projects.ini
          --package-name {{ project_info['name'] }}
+         {% if dlrn_url is defined %}
          --use-public
+         {% endif %}
          --local
-         --info-repo {{ rdoinfo_dir }}
+         --info-repo {{ ansible_user_dir }}
          --verbose-build
   args:
     chdir: "{{ working_dir }}"

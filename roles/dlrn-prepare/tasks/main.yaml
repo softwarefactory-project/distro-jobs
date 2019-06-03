@@ -19,15 +19,9 @@
           - dlrn_config_url is defined
         fail_msg: "'dlrn_config_url' must be set to an URL where {{ dlrn_project }} can be downloaded. This is the rdoinfo file."
 
-    - name: Ensure __rdoinfo exists
-      file:
-        path: "{{ ansible_user_dir }}/__rdoinfo"
-        state: directory
-
-    - name: Create rdo.yml
+    - name: Fetch rdo info file
       shell: |
-        curl "{{ dlrn_config_url }}/{{ dlrn_project }}" > "{{ ansible_user_dir }}/__rdoinfo/rdo.yml"
-        ln -s rdo.yml "{{ ansible_user_dir }}/__rdoinfo/rdo-full.yml"
+        curl "{{ dlrn_config_url }}/{{ dlrn_project }}" > "{{ ansible_user_dir }}/rdo.yml"
 
 # DLRN uses mock to build the srpm. In any cases a mock configuration should
 # be set
