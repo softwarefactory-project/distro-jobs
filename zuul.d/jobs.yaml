@@ -54,6 +54,22 @@
       dlrn_builder_type: koji
       koji_build_target: rawhide
 
+- job:
+    name: dlrn-copr-rpm-build
+    description: |
+      Build rpm(s) in Copr
+
+      Responds to these variables:
+
+      .. zuul:jobvar:: copr_id
+
+         The Kerberos principal.
+
+    parent: dlrn-rpm-build
+    abstract: true
+    vars:
+      dlrn_builder_type: copr
+
 # Below are some job examples
 # - job:
 #     name: example-rpm-mock-build
