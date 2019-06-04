@@ -29,6 +29,8 @@
         curl "{{ dlrn_config_url }}/{{ dlrn_project }}" > "{{ ansible_user_dir }}/__rdoinfo/rdo.yml"
         ln -s rdo.yml "{{ ansible_user_dir }}/__rdoinfo/rdo-full.yml"
 
+# DLRN uses mock to build the srpm. In any cases a mock configuration should
+# be set
 - name: Copy project mock config
   copy:
     src: "{{ zuul.executor.src_root }}/{{ dlrn_config_dir }}/{{ dlrn_project }}.cfg"

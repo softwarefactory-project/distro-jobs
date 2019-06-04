@@ -2,6 +2,9 @@
 configdir={{ working_dir }}
 datadir={{ dlrn_data }}
 scriptsdir={{ ansible_user_dir }}/.local/share/dlrn/scripts
+{% if base_url is defined %}
+baseurl={{ dlrn_url }}/{{ dlrn_project }}
+{% endif %}
 distro=master
 source=master
 target={{ dlrn_project }}
@@ -9,17 +12,29 @@ project_name={{ dlrn_project }}
 reponame=delorean
 maxretries=3
 smtpserver=
+{% if dlrn_info_type == 'rdoinfo' %}
+pkginfo_driver=dlrn.drivers.rdoinfo.RdoInfoDriver
+{% endif %}
+{% if dlrn_info_type == 'local' %}
 pkginfo_driver=dlrn.drivers.local.LocalDriver
+{% endif %}
+{% if dlrn_builder_type == 'mock' %}
+build_driver=dlrn.drivers.mockdriver.MockBuildDriver
+{% endif %}
+{% if dlrn_builder_type == 'koji' %}
 build_driver=dlrn.drivers.kojidriver.KojiBuildDriver
+{% endif %}
 tags=
 workers=1
 database_connection=sqlite:///{{ working_dir }}/commits.sqlite
 fallback_to_master=1
 release_numbering=0.1.date.hash
 
+{% if dlrn_builder_type == 'koji' %}
 [kojibuild_driver]
 koji_exe=koji
 krb_principal={{ krb_principal }}
 krb_keytab={{ krb_keytab_path }}
 scratch_build=True
 build_target={{ koji_build_target }}
+{% endif %}

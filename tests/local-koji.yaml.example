@@ -5,7 +5,7 @@
   roles:
     - ensure-dlrn
     - dlrn-prepare
-    - dlrn-koji-build
+    - dlrn-build
   vars:
     ansible_user_dir: /home/fabien/dlrn-exp/fake_ansible_user_dir
     zuul:
@@ -15,6 +15,8 @@
         src_dir: python-redis
     dlrn_project: fedora-rawhide-x86_64
     dlrn_config_dir: fedora-packaging/mock
+    dlrn_builder_type: koji
+    koji_build_target: rawhide
     krb_principal: fbo@FEDORAPROJECT.ORG
     krb_keytab_path: /home/fabien/fedora-fbo.keytab
     
