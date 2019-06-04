@@ -1,0 +1,6 @@
+---
+working_dir: "{{ ansible_user_dir }}/{{ zuul.project.src_dir | dirname }}"
+dlrn_data: "{{ working_dir }}/DLRN/data"
+krb_principal: "jdoe@@FEDORAPROJECT.ORG"
+krb_keytab_path: "{{ ansible_user_dir}}/keytab"
+koji_build_target: "rawhide"
