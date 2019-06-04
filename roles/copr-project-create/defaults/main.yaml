@@ -1,0 +1,4 @@
+copr_cmd: copr-cli
+chroot_name: fedora-rawhide-x86_64
+project_name: demo-project
+repos: []

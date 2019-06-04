@@ -1,0 +1,38 @@
+---
+- name: Install system dependencies
+  yum:
+    name: "rpm-build,spectool"
+    state: latest
+  become: true
+
+- name: Clean previous rpmbuild directories
+  file:
+    path: "{{ ansible_user_dir }}/rpmbuild/{{ item }}"
+    state: absent
+  loop:
+    - SOURCES
+    - SRPMS
+
+- name: Create rpmbuild directories
+  file:
+    path: "{{ ansible_user_dir }}/rpmbuild/{{ item }}"
+    state: directory
+  loop:
+    - SOURCES
+    - SRPMS
+
+- name: Retrieve sources
+  command: |
+    spectool -g -C {{ ansible_user_dir }}/rpmbuild/SOURCES
+    {{ zuul.project.src_dir }}/{{ package }}.spec
+
+- name: Build the SRPM
+  command: rpmbuild -bs {{ zuul.project.src_dir }}/{{ package }}.spec
+
+- name: Get SRPM path
+  command: ls {{ ansible_user_dir }}/rpmbuild/SRPMS/
+  register: result
+
+- name: Set SRPM path fact
+  set_fact:
+    srpm: "{{ ansible_user_dir }}/rpmbuild/SRPMS/{{ result.stdout }}"

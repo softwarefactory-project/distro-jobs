@@ -1,0 +1,19 @@
+# TODO add preparation play to setup environement to run this
+
+- hosts: localhost
+  roles:
+    - simple-srpm-build
+    - copr-project-create
+    - copr-build
+    - copr-project-delete
+    # - copr-fetch
+  vars:
+    chroot_name: fedora-rawhide-x86_64
+    project_name: python-redis.pr2.69fd12b5
+    package: python-redis
+    repos: []
+    zuul:
+      change: 12
+      patchset: 1
+      project:
+        src_dir: "{{ ansible_user_dir }}/dlrn-exp/python-redis"
