@@ -1,5 +1,4 @@
 - hosts: mock-host
   roles:
-    # TODO
-    #- ensure-dlrnapiclient
+    - ensure-dlrnapi-client
     - dlrn-publish

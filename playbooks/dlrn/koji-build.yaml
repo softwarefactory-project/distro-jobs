@@ -1,0 +1,7 @@
+- hosts: mock-host
+  roles:
+    - ensure-dlrn
+    - dlrn-prepare
+    - dlrn-koji-build
+  vars:
+    pip_executable: /usr/bin/pip3
